@@ -11,10 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
+        id: cache
         with:
           key: "${{ hashFiles('package-lock.json') }}"
           path: node_modules
-      - run: make install
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: make install
       - run: make lint
 
   test:
@@ -22,10 +24,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
+        id: cache
         with:
           path: node_modules
-          key: "${{ hashFiles('package-log.json') }}"
-      - run: make install
+          key: "${{ hashFiles('package-lock.json') }}"
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: make install
       - run: make test
       - run: make output_test_reports
 
@@ -35,10 +39,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
+        id: cache
         with:
           path: node_modules
           key: "${{ hashFiles('package-lock.json') }}"
-      - run: make install
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: make install
       - uses: actions/upload-artifact@v3
         with:
           path: dist
