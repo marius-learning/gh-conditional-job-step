@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: qa
-      url: http://github-actions-course-website.s3-website-us-east-1.amazonaws.com/
+      url: http://gh-actions-course.mariusmihai.org/
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
