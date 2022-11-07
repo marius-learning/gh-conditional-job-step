@@ -88,6 +88,6 @@ jobs:
 
   workflow_canceled:
     runs-on: ubuntu-latest
-    if: cancelled()
+    if: always() && cancelled()
     steps:
       - run: echo "Workflow Canceled"
