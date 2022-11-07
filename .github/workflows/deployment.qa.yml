@@ -45,6 +45,7 @@ jobs:
           key: "${{ hashFiles('package-lock.json') }}"
       - if: steps.cache.outputs.cache-hit != 'true'
         run: make install
+      - run: make build
       - uses: actions/upload-artifact@v3
         with:
           path: dist
