@@ -30,7 +30,7 @@ jobs:
       - run: make output_test_reports
 
   build:
-    needs: [test, list]
+    needs: [test, lint]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
