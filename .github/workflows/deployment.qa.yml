@@ -1,0 +1,60 @@
+name: Deploy QA
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          key: "${{ hashFiles('package-lock.json') }}"
+          path: node_modules
+      - run: make install
+      - run: make lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: "${{ hashFiles('package-log.json') }}"
+      - run: make install
+      - run: make test
+      - run: make output_test_reports
+
+  build:
+    needs: [test, list]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: "${{ hashFiles('package-lock.json') }}"
+      - run: make install
+      - uses: actions/upload-artifact@v3
+        with:
+          path: dist
+          name: build
+          retention-days: 1
+
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment:
+      name: qa
+      url: http://github-actions-course-website.s3-website-us-east-1.amazonaws.com/
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: dist
+      - run: make deploy
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
