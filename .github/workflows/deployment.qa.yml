@@ -30,8 +30,22 @@ jobs:
           key: "${{ hashFiles('package-lock.json') }}"
       - if: steps.cache.outputs.cache-hit != 'true'
         run: make install
-      - run: make test
-      - run: make output_test_reports
+      - id: test
+        run: make test
+      - if: steps.test.outcome == 'failure'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-reports
+          path: report.json
+
+  test_reports:
+    needs: [test]
+    if: jobs.test.outcome == 'failure'
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-reports
+      - run: cat report.json
 
   build:
     needs: [test, lint]
