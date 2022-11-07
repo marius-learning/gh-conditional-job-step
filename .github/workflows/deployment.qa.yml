@@ -31,6 +31,7 @@ jobs:
       - if: steps.cache.outputs.cache-hit != 'true'
         run: make install
       - id: test
+        continue-on-error: true
         run: make test
       - if: steps.test.outcome == 'failure'
         uses: actions/upload-artifact@v3
