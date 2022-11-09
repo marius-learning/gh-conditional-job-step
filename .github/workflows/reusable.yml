@@ -8,9 +8,18 @@ on:
       artifact-path:
         type: string
         required: true
+      environment:
+        type: string
+        required: true
+      environment-url:
+        type: string
+        required: true
 
 jobs:
   deploy:
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ inputs.environment-url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
