@@ -16,16 +16,12 @@ on:
         required: true
     secrets:
       AWS_REGION:
-        type: string
         required: true
       BUCKET_NAME:
-        type: string
         required: true
       AWS_ACCESS_KEY_ID:
-        type: string
         required: true
       AWS_SECRET_ACCESS_KEY:
-        type: string
         required: true
 
 jobs:
