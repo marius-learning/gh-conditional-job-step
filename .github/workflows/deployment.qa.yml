@@ -40,8 +40,9 @@ jobs:
 
   test_reports:
     needs: [test]
-    if: failure() && needs.test.result == 'failure'
     runs-on: ubuntu-latest
+    if: failure()
+    # if: failure() && needs.test.result == 'failure'
     steps:
       - uses: actions/download-artifact@v3
         with:
