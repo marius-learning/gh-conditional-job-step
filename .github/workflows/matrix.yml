@@ -80,5 +80,5 @@ jobs:
         with:
           path: node_modules
           key: "${{ hashFiles('package-lock.json') }}"
-      - uses: make install
-      - uses: make test
+      - run: make install
+      - run: make test
