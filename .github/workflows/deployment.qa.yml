@@ -70,12 +70,12 @@ jobs:
 
   deploy:
     needs: [build]
+    environment: qa
     uses: ./.github/workflows/reusable.yml
     with:
-      environment: qa
       artifact-path: dist
       artifact-name: build
-      environment-url: http://gh-actions-course.mariusmihai.org/
+    secrets: inherit
 
   # deploy:
   #   needs: [build]
