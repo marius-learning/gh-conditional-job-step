@@ -1,0 +1,35 @@
+name: Deploy Application Workflow
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        type: string
+        required: true
+      artifact-path:
+        type: string
+        required: true
+      environment:
+        type: string
+        required: true
+      environment-url:
+        type: string
+        required: true
+
+jobs:
+  deploy:
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ inputs.environment-url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: ${{ inputs.artifact-path }}
+      - run: make deploy
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

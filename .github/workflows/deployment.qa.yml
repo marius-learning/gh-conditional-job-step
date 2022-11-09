@@ -70,19 +70,28 @@ jobs:
 
   deploy:
     needs: [build]
-    runs-on: ubuntu-latest
-    environment:
-      name: qa
-      url: http://gh-actions-course.mariusmihai.org/
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
-          path: dist
-      - run: make deploy
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    uses: ./.github/workflows/reusable.yml
+    with:
+      environment: qa
+      artifact-path: dist
+      artifact-name: build
+      environment-url: http://gh-actions-course.mariusmihai.org/
+
+  # deploy:
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: qa
+  #     url: http://gh-actions-course.mariusmihai.org/
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: build
+  #         path: dist
+  #     - run: make deploy
+  #       env:
+  #         AWS_REGION: ${{ secrets.AWS_REGION }}
+  #         BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

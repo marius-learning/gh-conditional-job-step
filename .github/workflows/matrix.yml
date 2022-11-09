@@ -62,6 +62,7 @@ jobs:
         include:
           - node: 14
             os: ubuntu-22.04
+            npm: 6
           - node: 16
             os: ubuntu-22.04
           - node: 18
@@ -76,6 +77,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+      - if: ${{ matrix.npm }}
+        run: npm i -g npm@${{ matrix.npm }}
       - uses: actions/cache@v3
         with:
           path: node_modules
