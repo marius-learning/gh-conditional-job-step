@@ -1,0 +1,63 @@
+name: Deploy Dev
+on: workflow_dispatch
+
+jobs:
+  lint:
+    runs-on: ubunut-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ hashFiles('package-lock.json') }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: make install
+      - run: make lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ hashFiles('package-lock.json') }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: make install
+      - run: make test
+      - uses: actions/upload-artifact@v3
+        with:
+          name: reports
+          retention-days: 1
+          path: report.json
+
+  report:
+    if: failure()
+    needs: [test]
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: reports
+      - run: cat report.json
+
+  build:
+    needs: [test, lint]
+    uses: ./.github/workflows/build.reusable.yml
+    with:
+      artifact-path: dist
+      artifact-retention-days: 2
+
+  deploy:
+    needs: [build]
+    uses: ./.github/workflows/deploy.reusable.yml
+    with:
+      environment: qa
+      artifact-path: dist
+      artifact-name: ${{ needs.build.output.artifact-name }}
+    secrets:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

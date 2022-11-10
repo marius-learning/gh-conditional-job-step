@@ -11,9 +11,6 @@ on:
       environment:
         type: string
         required: true
-      environment-url:
-        type: string
-        required: true
     secrets:
       AWS_REGION:
         required: true
@@ -28,7 +25,6 @@ jobs:
   deploy:
     environment:
       name: ${{ inputs.environment }}
-      url: ${{ inputs.environment-url }}
     runs-on: ubuntu-latest
     steps:
       - run: echo "${{ toJSON(secrets) }}"

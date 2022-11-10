@@ -1,0 +1,36 @@
+name: Build Application Reusable
+on:
+  workflow_call:
+    inputs:
+      artifact-retention-days:
+        default: 1
+        type: number
+        required: false
+      artifact-path:
+        type: string
+        required: true
+    outputs:
+      artifact-name:
+        description: "Artifact name"
+        value: ${{ jobs.build.outputs.name }}
+
+jobs:
+  build:
+    outputs: ${{ steps.set-artifact-name.outputs.name }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          key: ${{ hashFiles('package-lock.json') }}
+          path: node_modules
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: make install
+      - run: make build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: ${{ inputs.build-path }}
+          retention-days: ${{ input.artifact-retention-days }}
+      - id: set-artifact-name
+        run: echo "name=build" >> $GITHUB_OUTPUT
