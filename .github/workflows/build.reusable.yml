@@ -6,6 +6,9 @@ on:
         default: 1
         type: number
         required: false
+      artifact-path:
+        type: string
+        required: true
     outputs:
       artifact-name:
         description: "Artifact name"
