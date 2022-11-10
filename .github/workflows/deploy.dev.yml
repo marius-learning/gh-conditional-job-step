@@ -26,8 +26,10 @@ jobs:
           key: ${{ hashFiles('package-lock.json') }}
       - if: steps.cache.outputs.cache-hit != 'true'
         run: make install
-      - run: make test
-      - uses: actions/upload-artifact@v3
+      - id: tests
+        run: make test
+      - if: failure() && steps.tests.conclusion == 'failure'
+        uses: actions/upload-artifact@v3
         with:
           name: reports
           retention-days: 1
