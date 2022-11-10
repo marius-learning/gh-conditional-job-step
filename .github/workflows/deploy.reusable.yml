@@ -5,7 +5,7 @@ on:
       artifact-name:
         type: string
         required: true
-      artifact-path:
+      artifact-restore-path:
         type: string
         required: true
       environment:
@@ -32,7 +32,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.artifact-name }}
-          path: ${{ inputs.artifact-path }}
+          path: ${{ inputs.artifact-restore-path }}
       - run: make deploy
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
