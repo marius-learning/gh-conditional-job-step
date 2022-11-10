@@ -23,9 +23,9 @@ on:
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environment }}
-    runs-on: ubuntu-latest
     steps:
       - run: echo "${{ toJSON(secrets) }}"
       - uses: actions/checkout@v3

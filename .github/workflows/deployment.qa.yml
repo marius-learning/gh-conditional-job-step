@@ -70,12 +70,11 @@ jobs:
 
   deploy:
     needs: [build]
-    uses: ./.github/workflows/reusable.yml
+    uses: ./.github/workflows/deploy.reusable.yml
     with:
       environment: qa
       artifact-path: dist
       artifact-name: build
-      environment-url: http://gh-actions-course.mariusmihai.org/
     secrets:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
