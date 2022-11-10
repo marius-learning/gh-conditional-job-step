@@ -27,7 +27,6 @@ jobs:
     environment:
       name: ${{ inputs.environment }}
     steps:
-      - run: echo "${{ toJSON(secrets) }}"
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
         with:
