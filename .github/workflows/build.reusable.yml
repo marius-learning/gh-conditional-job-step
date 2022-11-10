@@ -33,6 +33,6 @@ jobs:
         with:
           name: build
           path: ${{ inputs.build-path }}
-          retention-days: ${{ input.artifact-retention-days }}
+          retention-days: ${{ inputs.artifact-retention-days }}
       - id: set-artifact-name
         run: echo "name=build" >> $GITHUB_OUTPUT
